@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.mapper.AdminMapper">
+    <!--<cache type="com.system.cache.MyCache"/>-->
+    <!-- 学生 -->
+    <select id="getStuList" resultMap="student">
+        select * from student 
+    </select>
+    <insert id="addStu">
+        INSERT INTO student (id,stuName,PASSWORD,stuNo,professional,userType) VALUES(#{id},#{userName},#{password},#{stuNo},#{professional},#{userType})
+    </insert>
+    <select id="getStuById" resultMap="student">
+        select * from student where id=#{id}
+    </select>
+    <update id="editStu">
+        UPDATE student SET stuName=#{userName},PASSWORD=#{password},stuNo=#{stuNo},professional=#{professional},userType=#{userType} WHERE id=#{id}
+    </update>
+    <delete id="deleteStu">
+        delete from student where id=#{id}
+    </delete>
+    <select id="getStuByName" resultMap="student">
+        select * from student where stuName=#{userName}
+    </select>
+    <select id="getStuByStuNo" resultMap="student">
+        select * from student where stuNo=#{stuNo}
+    </select>
+    <select id="getStuByPro" resultMap="student">
+        select * from student where professional=#{pro}
+    </select>
+    <!-- 教师 -->
+    <select id="getTeaList" resultMap="teacher">
+        select * from teacher 
+    </select>
+    <insert id="addTea">
+        INSERT INTO teacher (id,teaName,PASSWORD,teaNo,userType) VALUES(#{id},#{userName},#{password},#{teaNo},#{userType})
+    </insert>
+    <select id="getTeaById" resultMap="teacher">
+        select * from teacher where id=#{id}
+    </select>
+    <update id="editTea">
+        UPDATE teacher SET teaName=#{userName},PASSWORD=#{password},teaNo=#{teaNo},userType=#{userType} WHERE id=#{id}
+    </update>
+    <delete id="deleteTea">
+        delete from teacher where id=#{id}
+    </delete>
+    <select id="getTeaByName" resultMap="teacher">
+        select * from teacher where teaName=#{userName}
+    </select>
+    <select id="getTeaByTeaNo" resultMap="teacher">
+        select * from teacher where teaNo=#{teaNo}
+    </select>
+    <!-- 课程 -->
+    <select id="getCourseList" resultMap="course">
+        SELECT c.*,t.teaName,t.teaNo FROM course c LEFT JOIN teacher t ON c.`teaId`=t.`id`
+    </select>
+    <select id="getCourseById" resultMap="course">
+        SELECT c.*,t.teaName,t.teaNo FROM course c LEFT JOIN teacher t ON c.`teaId`=t.`id` where c.id=#{id}
+    </select>
+    <insert id="addCourse">
+        INSERT INTO course (id,courseName,courseType,credit,teaId,selectNum) VALUES(#{id},#{courseName},#{courseType},#{credit},#{tea.id},#{selectNum})
+    </insert>
+    <update id="editCourse">
+        UPDATE course SET courseName=#{courseName},courseType=#{courseType},credit=#{credit},teaId=#{tea.id},selectNum=#{selectNum} WHERE id=#{id}
+    </update>
+    <delete id="deleteCourse">
+        delete from course where id=#{id}
+    </delete>
+    <select id="getCourseByName" resultMap="course">
+        SELECT c.*,t.teaName,t.teaNo FROM course c LEFT JOIN teacher t ON c.`teaId`=t.`id` where c.courseName=#{courseName}
+    </select>
+    <select id="getCourseByCourseType" resultMap="course">
+        SELECT c.*,t.teaName,t.teaNo FROM course c LEFT JOIN teacher t ON c.`teaId`=t.`id` where c.courseType=#{courseType}
+    </select>
+    <select id="getCourseByCredit" resultMap="course">
+        SELECT c.*,t.teaName,t.teaNo FROM course c LEFT JOIN teacher t ON c.`teaId`=t.`id` where c.credit=#{credit}
+    </select>
+    <select id="getCourseByTeaName" resultMap="course">
+        SELECT c.*,t.teaName,t.teaNo FROM course c LEFT JOIN teacher t ON c.`teaId`=t.`id` where t.teaName=#{teaName}
+    </select>
+    <select id="getStuByCourseId" resultMap="score">
+        SELECT sc.id,sc.sid,st.stuName,st.stuNo,st.professional,sc.cid,c.courseName,c.credit,sc.score,c.teaId,t.teaName,c.courseType
+        FROM score sc,student st,teacher t,course c  
+        WHERE c.teaId=t.id AND c.id=sc.cid AND st.id=sc.sid AND sc.cid=#{courseId}
+    </select>
+    <insert id="addScore">
+        INSERT INTO score (id,sid,cid,score) VALUES(null,#{sid},#{cid},#{score})
+    </insert>
+    <delete id="deleteScore" >
+        delete from score where id = #{id}
+    </delete>
+    <update id="addStuNum">
+        update course set stuNum = stuNum + 1 where id = #{courseId}
+    </update>
+    <update id="reduceStuNum">
+        update course set stuNum = stuNum - 1 where id = #{courseId}
+    </update>
+    <resultMap type="com.system.bean.Student" id="student">
+        <id property="id" column="id"></id>
+        <result property="userName" column="stuName"/>
+        <result property="password" column="password"/>
+        <result property="stuNo" column="stuNo"/>
+        <result property="professional" column="professional"/>
+        <result property="userType" column="userType"/>
+    </resultMap>
+    <resultMap type="com.system.bean.Teacher" id="teacher">
+        <id property="id" column="id"></id>
+        <result property="userName" column="teaName"/>
+        <result property="password" column="password"/>
+        <result property="teaNo" column="teaNo"/>
+        <result property="userType" column="userType"/>
+    </resultMap>
+    <resultMap type="com.system.bean.Course" id="course">
+        <id property="id" column="id"></id>
+        <result property="courseName" column="courseName"/>
+        <result property="courseType" column="courseType"/>
+        <result property="credit" column="credit"/>
+        <result property="stuNum" column="stuNum"/>
+        <result property="selectNum" column="selectNum"/>
+        <association property="tea" javaType="com.system.bean.Teacher">
+            <id property="id" column="teaId"></id>
+            <result property="userName" column="teaName"/>
+            <result property="teaNo" column="teaNo"/>
+        </association>
+    </resultMap>
+    <resultMap type="com.system.bean.Score" id="score">
+        <id property="id" column="id"></id>
+        <result property="score" column="score"/>
+        <association property="course" javaType="com.system.bean.Course">
+            <id property="id" column="cid"></id>
+            <result property="courseName" column="courseName"/>
+            <result property="courseType" column="courseType"/>
+            <result property="credit" column="credit"/>
+            <result property="stuNum" column="stuNum"/>
+            <result property="selectNum" column="selectNum"/>
+            <association property="tea" javaType="com.system.bean.Teacher">
+                <id property="id" column="teaId"></id>
+                <result property="userName" column="teaName"/>
+                <result property="teaNo" column="teaNo"/>
+            </association>
+        </association>
+        <association property="stu" javaType="com.system.bean.Student">
+            <id property="id" column="sid"></id>
+            <result property="userName" column="stuName"/>
+            <result property="stuNo" column="stuNo"/>
+            <result property="professional" column="professional"/>
+        </association>
+    </resultMap>
+</mapper>
