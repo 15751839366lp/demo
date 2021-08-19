@@ -32,6 +32,8 @@ public interface StudentMapper {
 
     List<Course> getAllCourse();
 
+    List<Course> getRecommendCourse(@Param("stuId") Integer stuId,@Param("courseList") List<Integer> courseList);
+
     void addStuNum(Integer courseId);
 
     void reduceStuNum(Integer courseId);

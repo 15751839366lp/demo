@@ -235,6 +235,7 @@ public class AdminController {
 
     @RequestMapping(value = "/course", method = RequestMethod.POST)
     public String addCourse(String courseName, String courseType, Integer credit, String teaNo, Integer selectNum) {
+        System.out.println(courseName+courseType+credit+teaNo+selectNum);
         if (adminServiceImpl.getTeaByTeaNo(teaNo) != null) {
             Course course = new Course(null, courseName, courseType, credit, adminServiceImpl.getTeaByTeaNo(teaNo).get(0), null, selectNum);
             adminServiceImpl.addCourse(course);

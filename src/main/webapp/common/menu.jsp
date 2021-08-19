@@ -39,6 +39,7 @@
             <c:if test="${user.userType=='学生'}">
             <li class="list-group-item"><a href="${ctp}/student/courseList?id=${user.id}" target="main">课程信息查看</a></li>
             <li class="list-group-item"><a href="${ctp}/student/selectList?id=${user.id}" target="main">选择课程</a></li>
+            <li class="list-group-item"><a href="${ctp}/student/recommendSelectList?id=${user.id}" target="main">选择推荐课程</a></li>
             <li class="list-group-item"><a href="${ctp}/student/scoreList?id=${user.id}" target="main">成绩查询</a></li>
             <li class="list-group-item"><a href="${ctp}/student/info?name=${user.userName}&pwd=${user.password}&stuNo=${user.stuNo}&pro=${user.professional}" target="main">个人信息查看</a></li>
             <li class="list-group-item"><a href="${ctp}/logout" target="_parent">安全退出</a></li>

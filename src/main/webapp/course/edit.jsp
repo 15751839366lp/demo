@@ -13,7 +13,6 @@
         $("#courseName").val("");
         $("#courseType").val("");
         $("#credit").val("");
-        $("#teaNo").val("");
         $("#selectNum").val("");
     }
     $(function () {
@@ -22,7 +21,7 @@
             var courseType = $("#courseType").val();
             var credit = $("#credit").val();
             var teaNo = $("#teaNo").val();
-            var selectNum = $("#selectNum").val("");
+            var selectNum = $("#selectNum").val();
             if (courseName == null || courseName == "") {
                 $("#error").html("课程名称不能为空！");
                 return false;

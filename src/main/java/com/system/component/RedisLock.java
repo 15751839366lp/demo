@@ -51,10 +51,7 @@ public class RedisLock {
 
     private static final StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
-    //private StringRedisSerializer stringRedisSerializer=new StringRedisSerializer();
-    /**
-     * 上锁
-     */
+
     public boolean lock(String key, String requestId, int retryTimes, String expireTime) {
         if (retryTimes <= 0) {
             retryTimes = 1;

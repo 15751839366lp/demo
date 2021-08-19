@@ -30,6 +30,16 @@
         SELECT c.`id`,c.`courseName`,c.`courseType`,c.`credit`,c.`teaId`,c.stuNum,c.selectNum,t.`teaName`,t.`teaNo`
         FROM teachercreateselectcourse c LEFT JOIN teacher t ON c.`teaId`=t.`id`
     </select>
+    <select id="getRecommendCourse" resultMap="course">
+        SELECT c.`id`,c.`courseName`,c.`courseType`,c.`credit`,c.`teaId`,c.stuNum,c.selectNum,t.`teaName`,t.`teaNo`
+        FROM teachercreateselectcourse c LEFT JOIN teacher t ON c.`teaId`=t.`id`
+        WHERE c.`id` NOT IN (SELECT sc.cid FROM selectCourse sc,student st,teacher t,teachercreateselectcourse c
+        WHERE c.teaId=t.id AND c.id=sc.cid AND st.id=sc.sid AND sc.sid=#{stuId}) AND
+        c.id IN
+        <foreach collection="courseList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
     <update id="addStuNum">
         update teachercreateselectcourse set stuNum = stuNum + 1 where id = #{courseId}
     </update>

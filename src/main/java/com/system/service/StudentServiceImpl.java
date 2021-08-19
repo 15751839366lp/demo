@@ -7,17 +7,18 @@ package com.system.service;
 
 import com.system.bean.Course;
 import com.system.bean.Score;
+import com.system.component.MyApriori;
 import com.system.component.RedisLock;
 import com.system.mapper.StudentMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jdk.internal.org.objectweb.asm.Handle;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ public class StudentServiceImpl implements StudentService{
     private final String PREFIX = "course_selectNum";
     private final String REDISLOCKPREFIX = "redis_lock_course_prefix_";
     private ConcurrentHashMap<Integer, Boolean> courseFull = new ConcurrentHashMap<>();
+    static List<List<String>> record = new ArrayList<List<String>>();//数据集
 
     @PostConstruct
     public void init() {
@@ -64,6 +66,16 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public List<Course> getMyCourseByStuId(Integer stuId) {
         return studentMapper.getMyCourseByStuId(stuId);
+    }
+
+    @Override
+    public List<Course> getRecommendCourse(Integer stuId) {
+        record = MyApriori.getRecord("D:\\Test\\course\\courses\\src\\main\\java\\com\\system\\component\\data.txt");
+        List<Integer> apriori =  MyApriori.Apriori(record);
+        System.out.println(apriori);
+        MyApriori.AssociationRulesMining();
+        List<Course> courseList = studentMapper.getRecommendCourse(stuId,apriori);
+        return courseList;
     }
 
     @Override

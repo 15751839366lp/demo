@@ -78,6 +78,19 @@ public class StudentController {
         return "student/selectCourse";
     }
 
+    @RequestMapping("/student/recommendSelectList")
+    public String recommendSelectList(@RequestParam(value = "page", defaultValue = "1") Integer i, @RequestParam("id") Integer stuId, Model model) {
+        PageHelper.startPage(i, 7);
+        List<Course> list = studentServiceImpl.getRecommendCourse(stuId);
+        List<Course> myCourseList = studentServiceImpl.getMyCourseByStuId(stuId);
+        PageInfo<Course> info = new PageInfo<>(list);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("myCourseList", myCourseList);
+        map.put("selectCourseList", info);
+        model.addAttribute("map", map);
+        return "student/selectCourse";
+    }
+
     @ResponseBody
     @RequestMapping("/student/choose")
     public String choose(@RequestParam("courseId") Integer courseId, @RequestParam("stuId") Integer stuId) {
